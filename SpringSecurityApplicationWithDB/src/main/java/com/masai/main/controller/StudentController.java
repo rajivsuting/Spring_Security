@@ -27,11 +27,20 @@ public class StudentController {
 	@Autowired
 	private PasswordEncoder pEncoder;
 	
+	@GetMapping("/hello")
+	public ResponseEntity<String> hello(){
+		return new ResponseEntity<String>("hello", HttpStatus.OK);
+	}
+	
 	@PostMapping("/register")
 	public ResponseEntity<Student> registerStudent(@RequestBody Student student){
 		
 		student.setPassword(pEncoder.encode(student.getPassword()));
-		return new ResponseEntity<Student>(sSer.registerStudent(student), HttpStatus.CREATED);
+		
+		Student savedStudent = sSer.registerStudent(student);
+		
+		return new ResponseEntity<Student>(savedStudent, HttpStatus.CREATED);
+		
 	}
 	
 	@GetMapping("/{email}")
@@ -46,6 +55,7 @@ public class StudentController {
 		return new ResponseEntity<List<Student>>(sSer.getAllStudent(), HttpStatus.OK);
 	}
 	
+	@GetMapping("/signin")
 	public ResponseEntity<String> getLoggedInStudentDetailsHandler(Authentication auth){
 		
 		Student student = sSer.findStudentByEmail(auth.getName());

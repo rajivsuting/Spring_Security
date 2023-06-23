@@ -13,14 +13,14 @@ import org.springframework.security.web.SecurityFilterChain;
 public class AppConfig {
 	
 	
-	
 	@Bean
-	SecurityFilterChain securityConfig(HttpSecurity http) throws Exception {
+	public SecurityFilterChain securityFilters(HttpSecurity http) throws Exception{
 		
 		http.authorizeHttpRequests(auth ->{
 			
-			auth.requestMatchers("/student/register").permitAll()
+			auth.requestMatchers(HttpMethod.POST, "/student/register").permitAll()
 			.anyRequest().authenticated();
+				
 		})
 		.csrf(csrf -> csrf.disable())
 		.formLogin(Customizer.withDefaults())
@@ -29,11 +29,10 @@ public class AppConfig {
 		return http.build();
 		
 	}
-
-    @Bean
-    PasswordEncoder passwordEncoder() {
-
-        return new BCryptPasswordEncoder();
-    }
+	
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 
 }
